@@ -5,7 +5,6 @@ import java.util.Optional;
 import javax.persistence.EntityManager;
 
 import be.vdab.entities.Docent;
-import be.vdab.filters.JPAFilter;
 
 public class DocentRepository {
 	public Optional<Docent> read(long id, EntityManager entityManager) {
@@ -14,5 +13,9 @@ public class DocentRepository {
 
 	public void create(Docent docent, EntityManager entityManager) {
 		entityManager.persist(docent);
+	}
+
+	public void delete(long id, EntityManager entityManager) {
+		read(id, entityManager).ifPresent(docent -> entityManager.remove(docent));
 	}
 }

@@ -161,4 +161,17 @@ public class Docent implements Serializable {
 	public void removeBijnaam(String bijnaam) {
 		bijnamen.remove(bijnaam);
 	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof Docent)) {
+			return false;
+		}
+		return ((Docent) obj).rijksRegisterNr == rijksRegisterNr;
+	}
+
+	@Override
+	public int hashCode() {
+		return Long.valueOf(rijksRegisterNr).hashCode();
+	}
 }

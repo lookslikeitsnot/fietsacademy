@@ -71,4 +71,9 @@ public class Campus implements Serializable {
 	public void remove(TelefoonNr telefoonNr) {
 		telefoonNrs.remove(telefoonNr);
 	}
+
+	public long getId() {
+		return id;
+	}
+	
 }

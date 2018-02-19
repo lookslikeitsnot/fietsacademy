@@ -13,8 +13,10 @@ import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import be.vdab.enums.Geslacht;
@@ -35,6 +37,9 @@ public class Docent implements Serializable {
 	@CollectionTable(name = "docentenbijnamen", joinColumns = @JoinColumn(name = "docentid"))
 	@Column(name = "Bijnaam")
 	private Set<String> bijnamen;
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+	@JoinColumn(name = "campusid")
+	private Campus campus;
 
 	public long getId() {
 		return id;
@@ -46,6 +51,14 @@ public class Docent implements Serializable {
 
 	public String getVoornaam() {
 		return voornaam;
+	}
+
+	public Campus getCampus() {
+		return campus;
+	}
+
+	public void setCampus(Campus campus) {
+		this.campus = campus;
 	}
 
 	public String getFamilienaam() {

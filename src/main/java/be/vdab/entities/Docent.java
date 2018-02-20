@@ -58,7 +58,15 @@ public class Docent implements Serializable {
 	}
 
 	public void setCampus(Campus campus) {
+		if (this.campus != null && this.campus.getDocenten().contains(this)) {
+			// als de andere kant nog niet bijgewerkt is
+			this.campus.remove(this); // werk je de andere kant bij
+		}
 		this.campus = campus;
+		if (campus != null && !campus.getDocenten().contains(this)) {
+			// als de andere kant nog niet bijgewerkt is
+			campus.add(this); // werk je de andere kant bij
+		}
 	}
 
 	public String getFamilienaam() {

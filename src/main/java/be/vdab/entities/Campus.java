@@ -34,18 +34,26 @@ public class Campus implements Serializable {
 	@CollectionTable(name = "campussentelefoonnrs", joinColumns = @JoinColumn(name = "campusid"))
 	@OrderBy("fax")
 	private Set<TelefoonNr> telefoonNrs;
-	@OneToMany
-	@JoinColumn(name = "campusid")
+	@OneToMany(mappedBy = "campus")
 	@OrderBy("voornaam, familienaam")
 	private Set<Docent> docenten;
+
 	public Set<Docent> getDocenten() {
-	return Collections.unmodifiableSet(docenten);
+		return Collections.unmodifiableSet(docenten);
 	}
+
 	public void add(Docent docent) {
-	docenten.add(docent);
+		docenten.add(docent);
+		if (docent.getCampus() != this) { // als de andere kant nog niet bijgewerkt is
+			docent.setCampus(this); // werk je de andere kant bij
+		}
 	}
+
 	public void remove(Docent docent) {
-	docenten.remove(docent);
+		docenten.remove(docent);
+		if (docent.getCampus() == this) { // als de andere kant nog niet bijgewerkt is
+			docent.setCampus(null); // werk je de andere kant bij
+		}
 	}
 
 	public String getNaam() {
@@ -90,5 +98,5 @@ public class Campus implements Serializable {
 	public long getId() {
 		return id;
 	}
-	
+
 }

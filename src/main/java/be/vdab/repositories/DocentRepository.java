@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import javax.persistence.NoResultException;
 
+import be.vdab.entities.Campus;
 import be.vdab.entities.Docent;
 import be.vdab.valueobjects.AantalDocentenPerWedde;
 import be.vdab.valueobjects.VoornaamEnId;
@@ -25,11 +26,8 @@ public class DocentRepository extends AbstractRepository {
 
 	public List<Docent> findByWeddeBetween(BigDecimal van, BigDecimal tot, int vanafRij, int aantalRijen) {
 		return getEntityManager().createNamedQuery("Docent.findByWeddeBetween", Docent.class).setParameter("van", van)
-				.setParameter("tot", tot)
-				.setFirstResult(vanafRij)
-				.setMaxResults(aantalRijen)
-				.setHint("javax.persistence.loadgraph",
-						getEntityManager().createEntityGraph(Docent.MET_CAMPUS))
+				.setParameter("tot", tot).setFirstResult(vanafRij).setMaxResults(aantalRijen)
+				.setHint("javax.persistence.loadgraph", getEntityManager().createEntityGraph(Docent.MET_CAMPUS))
 				.getResultList();
 	}
 
@@ -50,19 +48,24 @@ public class DocentRepository extends AbstractRepository {
 	}
 
 	public void algemeneOpslag(BigDecimal factor) {
-		getEntityManager().createNamedQuery("Docent.algemeneOpslag")
-		.setParameter("factor", factor)
-		.executeUpdate();
+		getEntityManager().createNamedQuery("Docent.algemeneOpslag").setParameter("factor", factor).executeUpdate();
 	}
 
 	public Optional<Docent> findByRijksRegisterNr(long rijksRegisterNr) {
 		try {
-			return Optional.of(
-					getEntityManager().createNamedQuery("Docent.findByRijksRegisterNr", Docent.class)
+			return Optional.of(getEntityManager()
+					.createNamedQuery("Docent.findByRijksRegisterNr", Docent.class)
 					.setParameter("rijksRegisterNr", rijksRegisterNr)
 					.getSingleResult());
 		} catch (NoResultException ex) {
 			return Optional.empty();
 		}
+	}
+
+	public List<Docent> findBestBetaaldeVanEenCampus(Campus campus) {
+		return getEntityManager()
+				.createNamedQuery("Docent.findBestBetaaldeVanEenCampus", Docent.class)
+				.setParameter("campus", campus)
+				.getResultList();
 	}
 }

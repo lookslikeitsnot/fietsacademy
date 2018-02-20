@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import javax.persistence.CollectionTable;
@@ -16,6 +17,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -40,6 +42,26 @@ public class Docent implements Serializable {
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "campusid")
 	private Campus campus;
+	@ManyToMany(mappedBy = "docenten")
+	private Set<Verantwoordelijkheid> verantwoordelijkheden = new LinkedHashSet<>();
+
+	public void add(Verantwoordelijkheid verantwoordelijkheid) {
+		verantwoordelijkheden.add(verantwoordelijkheid);
+		if (!verantwoordelijkheid.getDocenten().contains(this)) {
+			verantwoordelijkheid.add(this);
+		}
+	}
+
+	public void remove(Verantwoordelijkheid verantwoordelijkheid) {
+		verantwoordelijkheden.remove(verantwoordelijkheid);
+		if (verantwoordelijkheid.getDocenten().contains(this)) {
+			verantwoordelijkheid.remove(this);
+		}
+	}
+
+	public Set<Verantwoordelijkheid> getVerantwoordelijkheden() {
+		return Collections.unmodifiableSet(verantwoordelijkheden);
+	}
 
 	public long getId() {
 		return id;
@@ -96,6 +118,7 @@ public class Docent implements Serializable {
 		setGeslacht(geslacht);
 		setRijksRegisterNr(rijksRegisterNr);
 		bijnamen = new HashSet<>();
+		verantwoordelijkheden = new LinkedHashSet<>();
 	}
 
 	public Set<String> getBijnamen() {

@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
+import javax.persistence.LockModeType;
 import javax.persistence.NoResultException;
 
 import be.vdab.entities.Campus;
@@ -53,19 +54,19 @@ public class DocentRepository extends AbstractRepository {
 
 	public Optional<Docent> findByRijksRegisterNr(long rijksRegisterNr) {
 		try {
-			return Optional.of(getEntityManager()
-					.createNamedQuery("Docent.findByRijksRegisterNr", Docent.class)
-					.setParameter("rijksRegisterNr", rijksRegisterNr)
-					.getSingleResult());
+			return Optional.of(getEntityManager().createNamedQuery("Docent.findByRijksRegisterNr", Docent.class)
+					.setParameter("rijksRegisterNr", rijksRegisterNr).getSingleResult());
 		} catch (NoResultException ex) {
 			return Optional.empty();
 		}
 	}
 
 	public List<Docent> findBestBetaaldeVanEenCampus(Campus campus) {
-		return getEntityManager()
-				.createNamedQuery("Docent.findBestBetaaldeVanEenCampus", Docent.class)
-				.setParameter("campus", campus)
-				.getResultList();
+		return getEntityManager().createNamedQuery("Docent.findBestBetaaldeVanEenCampus", Docent.class)
+				.setParameter("campus", campus).getResultList();
+	}
+
+	public Optional<Docent> readWithLock(long id) {
+		return Optional.ofNullable(getEntityManager().find(Docent.class, id, LockModeType.PESSIMISTIC_WRITE));
 	}
 }

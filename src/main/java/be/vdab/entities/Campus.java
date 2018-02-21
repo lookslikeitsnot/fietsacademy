@@ -81,7 +81,6 @@ public class Campus implements Serializable {
 		this.adres = adres;
 	}
 
-	// je maakt getters en setters voor naam en adres
 	public Campus(String naam, Adres adres) {
 		setNaam(naam);
 		setAdres(adres);

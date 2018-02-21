@@ -63,8 +63,8 @@
 		<c:url value='/docenten/opslag.htm' var='opslagURL'>
 			<c:param name='id' value='${docent.id}' />
 		</c:url>
-		<form action="${opslagURL}">
-			<input type="button" value='Opslag'>
+		<form action="${opslagURL}" method="post">
+			<input type="submit" name ='id' value='Opslag'>
 		</form>
 	</c:if>
 </body>
